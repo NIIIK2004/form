@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Все заявки</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap"
+          rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/global.css}">
+</head>
+<style>
+    input:not(:placeholder-shown), .form-block input:focus {
+        color: black;
+        border: 1px solid transparent;
+    }
+
+    ul {
+        list-style: none;
+    }
+</style>
+<body>
+
+<section>
+    <div class="container">
+        <div class="object_wrapper">
+            <div class="object_wrapper-top">
+                <div class="object_wrapper-top-left">
+                    <a href="#">
+                        <p th:if="${#authorization.expression('hasAuthority(''Администратор'')')}">Пользовательские заявки</p>
+                        <p th:if="${#authorization.expression('hasAuthority(''Пользователь'')')}">Ваши заявки</p>
+                    </a>
+
+                </div>
+                <div class="object_wrapper-top-right">
+                    <div class="search">
+                        <img th:src="@{/images/search.svg}">
+                        <input type="search" placeholder="Поиск...">
+                    </div>
+                    <ul>
+                        <li><img th:src="@{/images/setting.svg}"></li>
+                        <li><img th:src="@{/images/folder.svg}"></li>
+                        <li><img th:src="@{/images/send.svg}"></li>
+                        <li><img th:src="@{/images/user.svg}"></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="object_wrapper_blocks">
+                <ul class="allObject">
+                    <li th:each="bid : ${bidList}" th:if="${#authorization.expression('hasAuthority(''Пользователь'')')}">
+                        <h1 th:text="${bid.title}"></h1>
+
+                        <div class="line"></div>
+                        <p th:text="${bid.content}"></p>
+                        <p th:text="${bid.status}">Status</p>
+                    </li>
+
+                    <li th:each="allbid : ${allBids}" th:if="${#authorization.expression('hasAuthority(''Администратор'')')}">
+                        <h1 th:text="${allbid.title}"></h1>
+                        <img class="data_user-admin" th:src="@{/images/data.svg}">
+                        <div class="line"></div>
+                        <p th:text="${allbid.content}"></p>
+                        <p th:text="${allbid.status}"></p>
+                        <div class="admin_panel"
+                             th:if="${#authorization.expression('hasAuthority(''Администратор'')')}">
+                            <a class="admin_panel-btn" th:href="@{/bid/accept/{id}(id=${allbid.id})}" style="color: #3ED744">Принять</a>
+                            <a class="admin_panel-btn" th:href="@{/bid/reject/{id}(id=${allbid.id})}" style="color: #D95D5D">Отклонить</a>
+                        </div>
+                        <div class="info_user">
+                            <span th:text=" 'Пользователь: ' + ${allbid.user.name}"></span>
+                            <span th:text=" 'ID: ' + ${allbid.user.id}"></span>
+                            <span th:text=" 'Email: ' + ${allbid.user.email}"></span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="object_bottom">
+            <div class="object_bottom-left">
+                <a th:href="@{/logout}">Войти в другой аккаунт</a>
+                <p th:text="${'Ваша роль: ' + user.roles}">Вы пользователь</p>
+            </div>
+            <div class="object_bottom-right">
+                <a th:href="@{/bid/create}" th:if="${#authorization.expression('hasAuthority(''Пользователь'')')}">Создать
+                    заявку</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
